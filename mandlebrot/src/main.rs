@@ -7,6 +7,7 @@ use std::str::FromStr;
 use image::ColorType;
 use image::png::PNGEncoder;
 use std::fs::File;
+use std::io::Write;
 
 #[allow(dead_code)]
 fn complex_square_add_loop(c: Complex<f64>) {
@@ -110,7 +111,7 @@ fn main() {
     let args: Vec<String> = std::env::args().collect();
     if args.len() != 5 {
         writeln!(std::io::stderr(), "Usage: mandelbrot FILE PIXELS UPPERLEFT LOWERRIGHT").unwrap();
-        //writeln!(std::io::stderr(), format!("Example: {} foo.png 1000x750 -1.20,0.35 -1.0,0.20", args[0])).unwrap();
+        writeln!(std::io::stderr(), "Example: {} foo.png 1000x750 -1.20,0.35 -1.0,0.20", args[0]).unwrap();
         std::process::exit(1);
     }
 
@@ -118,7 +119,7 @@ fn main() {
     let upper_left = parse_complex(&args[3]).expect("error parsing upper left");
     let lower_right = parse_complex(&args[4]).expect("error parsing lower right");
 
-    let mut pixels = vec![0.;bounds.0 * bounds.1];
+    let mut pixels = vec![0;bounds.0 * bounds.1];
     render(&mut pixels, bounds, upper_left, lower_right);
     write_image(&args[1], &pixels, bounds).expect("error writing png file");
 }
